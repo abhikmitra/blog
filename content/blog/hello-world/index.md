@@ -1,6 +1,6 @@
 ---
 title: Hello World - Starting a new Blog Series 
-date: "2015-05-01T22:12:03.284Z"
+date: "2020-04-13T18:00:00.284Z"
 description: "Hello World!"
 ---
 
