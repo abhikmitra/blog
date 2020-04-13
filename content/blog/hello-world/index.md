@@ -4,7 +4,7 @@ date: "2020-04-13T18:00:00.284Z"
 description: "Hello World!"
 ---
 
-This is my first post on my  blog! How exciting! 
+This is my first post on my blog! How exciting! 
 
 For the last few years, I have been building distributed systems in Dot Net. As a result, I live in the Microsoft ecosystem bubble of `Azure`, `Service Fabric`, `Windows`, `Azure DevOps` , etc. 
 
