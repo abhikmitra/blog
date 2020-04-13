@@ -1,22 +1,15 @@
 ---
-title: Hello World
+title: Hello World - Starting a new Blog Series 
 date: "2015-05-01T22:12:03.284Z"
-description: "Hello World"
+description: "Hello World!"
 ---
 
-This is my first post on my new fake blog! How exciting!
+This is my first post on my  blog! How exciting! 
 
-I'm sure I'll write a lot more interesting things in the future.
+For the last few years, I have been building distributed systems in Dot Net. As a result, I live in the Microsoft ecosystem bubble of `Azure`, `Service Fabric`, `Windows`, `Azure DevOps` , etc. 
 
-Oh, and here's a great quote from this Wikipedia on
-[salted duck eggs](https://en.wikipedia.org/wiki/Salted_duck_egg).
+With DotNet being open source and cross-platform, .NET core should work with all the OSS tech out there. This series will look at how we can build a DotNet app, make it talk to some of the leading OSS frameworks and build a polyglot app.
 
-> A salted duck egg is a Chinese preserved food product made by soaking duck
-> eggs in brine, or packing each egg in damp, salted charcoal. In Asian
-> supermarkets, these eggs are sometimes sold covered in a thick layer of salted
-> charcoal paste. The eggs may also be sold with the salted paste removed,
-> wrapped in plastic, and vacuum packed. From the salt curing process, the
-> salted duck eggs have a briny aroma, a gelatin-like egg white and a
-> firm-textured, round yolk that is bright orange-red in color.
+And I want to do all of this without using anything from the typical dot net ecosystem other than the language itself. That means no Azure, no service fabric, etc.
 
-![Chinese Salty Egg](./salty_egg.jpg)
+The primary aim for this series is for me to learn and some how documenting what I learn helps me grok things easily. Hope, some of you might benefit from this as well. 
