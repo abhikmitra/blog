@@ -1,5 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down what I think]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 13 Apr 2020 12:39:03 GMT</lastBuildDate><item><title><![CDATA[Hello World - Starting a new Blog Series]]></title><description><![CDATA[This is my first post on my blog! How exciting!  For the last few years, I have been building distributed systems in Dot Net. As a result, I…]]></description><link>https://abhikmitra.github.io/blog/hello-world/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/hello-world/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is my first post on my blog! How exciting! &lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down what I think]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 22 Apr 2020 19:36:13 GMT</lastBuildDate><item><title><![CDATA[No title]]></title><description><![CDATA[Nice diagram check here uakdjdna]]></description><link>https://abhikmitra.github.io/blog/durable-task/DTFFlow/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/durable-task/DTFFlow/</guid><content:encoded>&lt;h1&gt;Nice diagram&lt;/h1&gt;
+&lt;h2&gt;check here&lt;/h2&gt;
+&lt;p&gt;uakdjdna&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
+    Client-&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
+    Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+    Hub--&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+    Hub--&amp;gt;&amp;gt;Worker: Task Scheduled
+    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorStarted
+    Hub--&amp;gt;&amp;gt;Tracker: ExecutionStarted
+    Hub--&amp;gt;&amp;gt;Tracker: TaskScheduled
+    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorCompleted
+    Hub--&amp;gt;&amp;gt;Tracker: HistoryState
+    Worker--&amp;gt;&amp;gt;Hub: Task Scheduled
+    Hub--&amp;gt;&amp;gt;TaskActivity: Task Invoked
+    Hub-&amp;gt;&amp;gt;Orchestrator: TaskCompleted
+    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorStarted
+    Tracker--&amp;gt;&amp;gt;Hub: ExecutionStarted
+    Tracker--&amp;gt;&amp;gt;Hub: TaskScheduled
+    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorCompleted
+    Tracker--&amp;gt;&amp;gt;Hub: HistoryState
+    Orchestrator--&amp;gt;&amp;gt;Hub: TaskCompleted
+    Hub--&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked &amp;amp; Completed
+    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorStarted
+    Hub--&amp;gt;&amp;gt;Tracker: TaskCompleted
+    Hub--&amp;gt;&amp;gt;Tracker: ExecutionCompleted
+    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorCompleted
+    Hub--&amp;gt;&amp;gt;Tracker: HistoryState
+
+    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorStarted
+    Tracker--&amp;gt;&amp;gt;Hub: TaskCompleted
+    Tracker--&amp;gt;&amp;gt;Hub: ExecutionCompleted
+    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorCompleted
+    Tracker--&amp;gt;&amp;gt;Hub: HistoryState&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Durable Task Framework Internals]]></title><description><![CDATA[Durable Task Frame work The Durable Task Framework is an orchestration framework for dot net apps.]]></description><link>https://abhikmitra.github.io/blog/durable-task/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/durable-task/</guid><pubDate>Thu, 23 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Durable Task Frame work&lt;/h3&gt;
+&lt;p&gt;The Durable Task Framework is an orchestration framework for dot net apps.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World - Starting a new Blog Series]]></title><description><![CDATA[This is my first post on my blog! How exciting!  For the last few years, I have been building distributed systems in Dot Net. As a result, I…]]></description><link>https://abhikmitra.github.io/blog/hello-world/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/hello-world/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is my first post on my blog! How exciting! &lt;/p&gt;
 &lt;p&gt;For the last few years, I have been building distributed systems in Dot Net. As a result, I live in the Microsoft ecosystem bubble of &lt;code class=&quot;language-text&quot;&gt;Azure&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Service Fabric&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Windows&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Azure DevOps&lt;/code&gt; , etc. &lt;/p&gt;
 &lt;p&gt;With DotNet being open source and cross-platform, .NET core should work with all the OSS tech out there. This series will look at how we can build a DotNet app, make it talk to some of the leading OSS frameworks and build a polyglot app.&lt;/p&gt;
 &lt;p&gt;And I want to do all of this without using anything from the typical dot net ecosystem other than the language itself. That means no Azure, no service fabric, etc.&lt;/p&gt;
-&lt;p&gt;The primary aim for this series is for me to learn and some how documenting what I learn helps me grok things easily. Hope, some of you might benefit from this as well. &lt;/p&gt;</content:encoded></item></channel></rss>
+&lt;p&gt;The primary aim for this series is for me to learn and some how documenting what I learn helps me grok things easily. Hope, some of you might benefit from this as well. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 1]]></title><description><![CDATA[Create a Repo Using github for creating my repo , even though Github is a part of Microsoft , it still does not fall into my typical day to…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app1/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app1/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Create a Repo&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Using github for creating my repo , even though Github is a part of Microsoft , it still does not fall into my typical day to day flow .&lt;/li&gt;
+&lt;li&gt;As of writing, sadly I was not able to get a gitgnore in the list of github .gitignore so we will initialize the repo with just a readme&lt;/li&gt;
+&lt;li&gt;You can find the repository &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Create an asp.net core app&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Clone the app&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;git clone git@github.com:abhikmitra/dotnet-outside-ms.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;I will be using Visual Studio 2019 as my preferred editor&lt;/li&gt;
+&lt;li&gt;Our stack will be ASP.NET Core 3.1 on .NET Core so that it is cross platform. I will start of with a Simple API template.&lt;/li&gt;
+&lt;li&gt;I am not selecting the the “Enable Docker Setup” as I want to do that myself. I have named the solution &lt;code class=&quot;language-text&quot;&gt;BackendApp&lt;/code&gt; and the project is &lt;code class=&quot;language-text&quot;&gt;BackendAPI&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Since Github doe snot have a .gitignore template for  dot net apps, we are gonna use this &lt;a href=&quot;https://raw.githubusercontent.com/OmniSharp/generator-aspnet/master/templates/gitignore.txt&quot;&gt;.gitignore&lt;/a&gt;. This might not be enough , we will see.&lt;/li&gt;
+&lt;li&gt;The app is going to expose one endpoint called &lt;code class=&quot;language-text&quot;&gt;api/environment/iscontainerized&lt;/code&gt;. The controller checks for the environment variable “containerized” and returns if its true or false. If you run the app , it should return false.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;End State: &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms/tree/1CreateApp&quot;&gt;The repo at the end of Part 1&lt;/a&gt;  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 2]]></title><description><![CDATA[Dockerize the app Follow directions here As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1 Create an asp.net…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app2/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app2/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Dockerize the app&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Follow directions &lt;a href=&quot;https://docs.docker.com/engine/examples/dotnetcore/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Create an asp.net core app&lt;/h3&gt;
+&lt;p&gt;End State: &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms/tree/1CreateApp&quot;&gt;The repo at the end of Part 1&lt;/a&gt;  &lt;/p&gt;</content:encoded></item></channel></rss>
