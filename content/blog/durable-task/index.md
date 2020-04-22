@@ -51,9 +51,7 @@ sequenceDiagram
 ```C#
 Console.WriteLine("Is Replaying =" + context.IsReplaying);
 Console.WriteLine("Running Orchestration");
-
 await context.ScheduleWithRetry<bool>(typeof(TestActivity1), options, "");
-
 Console.WriteLine("Orchestration Finished");
 return result; 
 ```
