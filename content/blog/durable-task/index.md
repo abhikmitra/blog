@@ -93,6 +93,7 @@ sequenceDiagram
     Hub-->>Worker: TaskScheduled
     Worker-->>Hub: Task Scheduled
     Hub->>TaskActivity: Task Invoked
+    Hub-->>Orchestrator: TaskCompleted
     Orchestrator-->>Hub: TaskCompleted
     Hub->>TestOrchestration: Orchestration Invoked & Completed
 ```
