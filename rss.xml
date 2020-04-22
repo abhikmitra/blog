@@ -1,42 +1,150 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down what I think]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 22 Apr 2020 19:36:13 GMT</lastBuildDate><item><title><![CDATA[No title]]></title><description><![CDATA[Nice diagram check here uakdjdna]]></description><link>https://abhikmitra.github.io/blog/durable-task/DTFFlow/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/durable-task/DTFFlow/</guid><content:encoded>&lt;h1&gt;Nice diagram&lt;/h1&gt;
-&lt;h2&gt;check here&lt;/h2&gt;
-&lt;p&gt;uakdjdna&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down what I think]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 22 Apr 2020 22:30:14 GMT</lastBuildDate><item><title><![CDATA[Durable Task Framework Internals]]></title><description><![CDATA[Durable Task Framework The Durable Task Framework is an orchestration framework for dot net apps. You can read more about it in their…]]></description><link>https://abhikmitra.github.io/blog/durable-task/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/durable-task/</guid><pubDate>Thu, 23 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Durable Task Framework&lt;/h3&gt;
+&lt;p&gt;The Durable Task Framework is an orchestration framework for dot net apps. You can read more about it in their official &lt;a href=&quot;https://github.com/Azure/durabletask&quot;&gt;github repo&lt;/a&gt;. This &lt;a href=&quot;https://channel9.msdn.com/Shows/On-NET/Building-workflows-with-the-Durable-Task-Framework&quot;&gt;channel 9 video&lt;/a&gt; does a pretty good job of explaining about the framework.&lt;/p&gt;
+&lt;p&gt;While I was reading through the materials , I felt the literature out their treated the system as a blackbox and I could’nt find any material on the web on how does DTF works under the hood. So I cloned DTF repo and added console logs to understand how it works. The following details apply to &lt;a href=&quot;https://www.nuget.org/packages/DurableTask.Core/&quot;&gt;DurableTask.Core&lt;/a&gt; version 2.0.0.6 which maps to commit id &lt;code class=&quot;language-text&quot;&gt;0a93eba6c9692f52776dac0f3741eccad3293ef6&lt;/code&gt; in the DTF Github repo.&lt;/p&gt;
+&lt;h3&gt;Setup&lt;/h3&gt;
+&lt;p&gt;My setup has 2 console apps , DTFDemoWorker and DTFClient. DTFDemoWorker houses the hubWorker and creates the resources. I have 1 Orchestration called a TestOrchestration which does 2 activities, testActivity1 and TestActivity2 both of which console logs to the console and waits for sometime to simulate some work being done.&lt;/p&gt;
+&lt;p&gt;You can find the repo &lt;a href=&quot;https://github.com/abhikmitra/DTFDemo&quot;&gt;here&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;When we create the resources DTF creates 3 Queues in the Service Bus &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;#x3C;TaskHubName&gt;/orchestrator&lt;/li&gt;
+&lt;li&gt;&amp;#x3C;TaskHubName&gt;/tracking&lt;/li&gt;
+&lt;li&gt;&amp;#x3C;TaskHubName&gt;/worker
+. &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Steps&lt;/h3&gt;
+&lt;p&gt;We will see whats the process in which Orchestrator provides reliability. We will ignore the tracking Queue for now and add that later. To kepe the diagrams simple , lets assume we just have 1 Task that gets invoked.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;We start the process with the following code from the Client.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c#&quot;&gt;&lt;pre class=&quot;language-c#&quot;&gt;&lt;code class=&quot;language-c#&quot;&gt;var instance = client.CreateOrchestrationInstanceAsync(typeof(TestOrchestration), &amp;quot;InstanceId5302&amp;quot;, &amp;quot;Test Input&amp;quot;).Result;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;This will send a message with event name &lt;code class=&quot;language-text&quot;&gt;ExecutionStarted&lt;/code&gt; message into the Orchestrator queue.There will be other details such as the orchestration name and id , that will help DTF to operate on teh correct instance of orchestration.&lt;/li&gt;
+&lt;/ol&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
-    Client-&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
-    Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
-    Hub--&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
-    Hub--&amp;gt;&amp;gt;Worker: Task Scheduled
-    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorStarted
-    Hub--&amp;gt;&amp;gt;Tracker: ExecutionStarted
-    Hub--&amp;gt;&amp;gt;Tracker: TaskScheduled
-    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorCompleted
-    Hub--&amp;gt;&amp;gt;Tracker: HistoryState
-    Worker--&amp;gt;&amp;gt;Hub: Task Scheduled
-    Hub--&amp;gt;&amp;gt;TaskActivity: Task Invoked
-    Hub-&amp;gt;&amp;gt;Orchestrator: TaskCompleted
-    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorStarted
-    Tracker--&amp;gt;&amp;gt;Hub: ExecutionStarted
-    Tracker--&amp;gt;&amp;gt;Hub: TaskScheduled
-    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorCompleted
-    Tracker--&amp;gt;&amp;gt;Hub: HistoryState
-    Orchestrator--&amp;gt;&amp;gt;Hub: TaskCompleted
-    Hub--&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked &amp;amp; Completed
-    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorStarted
-    Hub--&amp;gt;&amp;gt;Tracker: TaskCompleted
-    Hub--&amp;gt;&amp;gt;Tracker: ExecutionCompleted
-    Hub--&amp;gt;&amp;gt;Tracker: OrchestratorCompleted
-    Hub--&amp;gt;&amp;gt;Tracker: HistoryState
+    Client-&amp;gt;&amp;gt;Orchestrator: ExecutionStarted&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;This is received by the hub &amp;#x26; the actual &lt;a href=&quot;https://github.com/abhikmitra/DTFDemo/blob/master/Domains/TestOrchestration.cs&quot;&gt;TestOrchestration&lt;/a&gt; code is invoked. As you can see in the link above , I have put in log statements and 2 log statements are invoked.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
+    Client--&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
 
-    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorStarted
-    Tracker--&amp;gt;&amp;gt;Hub: TaskCompleted
-    Tracker--&amp;gt;&amp;gt;Hub: ExecutionCompleted
-    Tracker--&amp;gt;&amp;gt;Hub: OrchestratorCompleted
-    Tracker--&amp;gt;&amp;gt;Hub: HistoryState&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[Durable Task Framework Internals]]></title><description><![CDATA[Durable Task Frame work The Durable Task Framework is an orchestration framework for dot net apps.]]></description><link>https://abhikmitra.github.io/blog/durable-task/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/durable-task/</guid><pubDate>Thu, 23 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Durable Task Frame work&lt;/h3&gt;
-&lt;p&gt;The Durable Task Framework is an orchestration framework for dot net apps.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Hello World - Starting a new Blog Series]]></title><description><![CDATA[This is my first post on my blog! How exciting!  For the last few years, I have been building distributed systems in Dot Net. As a result, I…]]></description><link>https://abhikmitra.github.io/blog/hello-world/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/hello-world/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is my first post on my blog! How exciting! &lt;/p&gt;
+    Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+
+    Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;Assume the orchestration code is as below. The orchestration runs till &lt;code class=&quot;language-text&quot;&gt;scheduleWithRetry&lt;/code&gt; and prints &lt;code class=&quot;language-text&quot;&gt;Running Orchestration&lt;/code&gt; into the console. Since this is the first time orchestration is running &lt;code class=&quot;language-text&quot;&gt;Is replaying&lt;/code&gt; is set to false. &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;c#&quot;&gt;&lt;pre class=&quot;language-c#&quot;&gt;&lt;code class=&quot;language-c#&quot;&gt;Console.WriteLine(&amp;quot;Is Replaying =&amp;quot; + context.IsReplaying);
+Console.WriteLine(&amp;quot;Running Orchestration&amp;quot;);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;await context.ScheduleWithRetry&lt;bool&gt;(typeof(TestActivity1), options, &quot;&quot;);&lt;/p&gt;
+&lt;p&gt;Console.WriteLine(“Orchestration Finished”);
+return result; &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;When the orchestration encounters an activity it puts a message into the Worker Queue and exits the orchestration. The rest of the orchestration is not executed.
+
+```mermaid
+sequenceDiagram
+    Client--&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
+
+    Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+
+    Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+    Hub--&amp;gt;&amp;gt;Worker: TaskScheduled&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;5&quot;&gt;
+&lt;li&gt;
+&lt;p&gt;The hub is also listening to the Worker Queue and picks up the &lt;code class=&quot;language-text&quot;&gt;TaskScheduled&lt;/code&gt; message and invokes the TaskActivity. For now lets assume all the TaskActivity does is a console log. So the task is immediately completed. When the task is completed the hub queues TaskCompleted event in the Orchestrator queue.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
+Client--&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
+
+Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+
+Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+Hub--&amp;gt;&amp;gt;Worker: TaskScheduled
+Worker--&amp;gt;&amp;gt;Hub: Task Scheduled
+Hub-&amp;gt;&amp;gt;TaskActivity: Task Invoked
+Hub--&amp;gt;&amp;gt;Orchestrator: TaskCompleted&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;The Orchestration wakes up moment the hub detects a message in the Orchestrator Queue and &lt;em&gt;restarts the Orchestration from the beginning&lt;/em&gt;. So all the logs that got printed last time gets printed again. Since this is the second time orchestration is running &lt;code class=&quot;language-text&quot;&gt;Is replaying&lt;/code&gt; is set to &lt;em&gt;True&lt;/em&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
+   Client--&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
+
+   Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+
+   Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+   Hub--&amp;gt;&amp;gt;Worker: TaskScheduled
+   Worker--&amp;gt;&amp;gt;Hub: Task Scheduled
+   Hub-&amp;gt;&amp;gt;TaskActivity: Task Invoked
+   Orchestrator--&amp;gt;&amp;gt;Hub: TaskCompleted
+   Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked &amp;amp; Completed&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;7&quot;&gt;
+&lt;li&gt;What happens when the the Hub fails in Step #5 while it is running the taskActivity ?&lt;/li&gt;
+&lt;li&gt;In a distributed system , we have to work with teh assumption that the hub can fail any time and so can the task. &lt;/li&gt;
+&lt;li&gt;The hub does not remove the TaskScheduledEvent unless the TasActivity is complete. So if in case the hub goes down, the service bus message will be present in teh queue. When the hub comes back , it will start from step 5 as if nothing had happened.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;What if, the Task itself throws an exception  ? &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;mermaid&quot;&gt;&lt;pre class=&quot;language-mermaid&quot;&gt;&lt;code class=&quot;language-mermaid&quot;&gt;sequenceDiagram
+Client--&amp;gt;&amp;gt;Orchestrator: ExecutionStarted
+Orchestrator--&amp;gt;&amp;gt;Hub: ExecutionStarted
+Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+Hub--&amp;gt;&amp;gt;Worker: TaskScheduled
+Worker--&amp;gt;&amp;gt;Hub: Task Scheduled
+Hub-&amp;gt;&amp;gt;TaskActivity: Task Invoked
+Note right of TaskActivity: Throws Exception!
+Hub--&amp;gt;&amp;gt;Orchestrator: TaskFailed
+Orchestrator--&amp;gt;&amp;gt;Hub: TaskFailed
+Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+note left of TestOrchestration: Error Handling &amp;lt;br/&amp;gt; Runs  till &amp;lt;br/&amp;gt;ScheduleWithRetry
+Hub--&amp;gt;&amp;gt;Orchestrator: Timer Fired
+Orchestrator--&amp;gt;&amp;gt;Hub: Timer Fired
+Hub-&amp;gt;&amp;gt;TestOrchestration: Orchestration Invoked
+Hub--&amp;gt;&amp;gt;Worker: TaskScheduled
+note left of TestOrchestration: Happy path restarts&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;How does DTF remember the results of each task Activity ?&lt;/li&gt;
+&lt;li&gt;DTF serializes all the events into orchestration messages (Session State) that it puts in service bus. For eg,
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 562px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/2798b67dcb285c283fb0a0df1e938e67/6e88f/serializedState.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 90.54054054054053%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAC2UlEQVQ4y41U2XLaQBDk/38pfsAgdF+AjQAJCYG5BOZK7HKVXe5MjwA7lYdEVVO7O9rt6Znp3cb++RnbaovtdoePjw98fn7i+nH9L3t/f8f5fMbb2xteX1/R2Gw2KPICHPmjnE4xeBxgmCSoqgq73e6/7FmIcWzkeY4szbATx+FwwHq9xmKxwHK5FNbbvw4ySLWplADn3HM1BZxkGcIgRDJIdOzGXYyGQ/R7PZ3TojBCr1vPk8EA02KKoiiQpukNlERIqJGJ0zQ68DwfVseE53qwTAuBF4j58BxPAfnPsV0kyRCJlGQ8HmM0GgnQBi8vL5Ly7gvQ6lhwHRdxFAmzPjoSwBcw13YExBHAUP57F1AHpoyt+5YEtrXeo+EIT08LHI9HNFKJ5FgObMtW0JqNpT6y5Uh/GASwzXoPMyCoI3PDMDT44DGpAcdCmw7LNNFsNuuDtq2pEtgXUJbDNARAgpKl0Wqj3TIQRTHWq7VK7lZDMrQZUYwM2BjzkrLnupoi2ROU7DzPQ5ZNMJ/NJc0nGWcoyxIzWStgPplcUgq1EawjmxHJ2vd99XsCGviBNCLFRPbPBISMKK2FgC6kfgRXQJWNH2q9yKrX7Um6dYA4jgUo1LRjSY+1Y93YAN6ujXR4tVqpEfwGyI1sBpn6kpLv1szoIzMGISh9/W5fdcrL8PDwoOC/fv0UUW+/aqi68+tmhCIR1iwKYwFxNQilZF406ooWW817PdNuG1LPTK8sBf4HQ/OiMWqOHVX5SOf5jyW4Nodsr9lMpyVO55MC8bYoYDHJVaTcUOvRugndkjlFzvW9sLr7cSeAfb3HtLUY7y/1dwNM07Hqy+YNEEaUxRWQnU6ls6UwYWlYt1wI5JdOM11293Q6faXM7sznc3Vsqssr8u014bO03+91M0f6CULjnB3mY1GWM2XZ4FPFJ+xwOGqk78ZUvtt+f8BS9rPLqbDjWQLzBSrkHWWA38xfAK69acTIAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Serialized state&quot;
+        title=&quot;Serialized state&quot;
+        src=&quot;/blog/static/2798b67dcb285c283fb0a0df1e938e67/6e88f/serializedState.png&quot;
+        srcset=&quot;/blog/static/2798b67dcb285c283fb0a0df1e938e67/12f09/serializedState.png 148w,
+/blog/static/2798b67dcb285c283fb0a0df1e938e67/e4a3f/serializedState.png 295w,
+/blog/static/2798b67dcb285c283fb0a0df1e938e67/6e88f/serializedState.png 562w&quot;
+        sizes=&quot;(max-width: 562px) 100vw, 562px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt; all of this tasks is serialized into the messages.&lt;/li&gt;
+&lt;/ol&gt;</content:encoded></item><item><title><![CDATA[Hello World - Starting a new Blog Series]]></title><description><![CDATA[This is my first post on my blog! How exciting!  For the last few years, I have been building distributed systems in Dot Net. As a result, I…]]></description><link>https://abhikmitra.github.io/blog/hello-world/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/hello-world/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This is my first post on my blog! How exciting! &lt;/p&gt;
 &lt;p&gt;For the last few years, I have been building distributed systems in Dot Net. As a result, I live in the Microsoft ecosystem bubble of &lt;code class=&quot;language-text&quot;&gt;Azure&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Service Fabric&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Windows&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;Azure DevOps&lt;/code&gt; , etc. &lt;/p&gt;
 &lt;p&gt;With DotNet being open source and cross-platform, .NET core should work with all the OSS tech out there. This series will look at how we can build a DotNet app, make it talk to some of the leading OSS frameworks and build a polyglot app.&lt;/p&gt;
 &lt;p&gt;And I want to do all of this without using anything from the typical dot net ecosystem other than the language itself. That means no Azure, no service fabric, etc.&lt;/p&gt;
-&lt;p&gt;The primary aim for this series is for me to learn and some how documenting what I learn helps me grok things easily. Hope, some of you might benefit from this as well. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 1]]></title><description><![CDATA[Create a Repo Using github for creating my repo , even though Github is a part of Microsoft , it still does not fall into my typical day to…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app1/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app1/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Create a Repo&lt;/h3&gt;
+&lt;p&gt;The primary aim for this series is for me to learn and some how documenting what I learn helps me grok things easily. Hope, some of you might benefit from this as well. &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 2]]></title><description><![CDATA[Dockerize the app Follow directions here As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1 Create an asp.net…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app2/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app2/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Dockerize the app&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Follow directions &lt;a href=&quot;https://docs.docker.com/engine/examples/dotnetcore/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Create an asp.net core app&lt;/h3&gt;
+&lt;p&gt;End State: &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms/tree/1CreateApp&quot;&gt;The repo at the end of Part 1&lt;/a&gt;  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 1]]></title><description><![CDATA[Create a Repo Using github for creating my repo , even though Github is a part of Microsoft , it still does not fall into my typical day to…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app1/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app1/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Create a Repo&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;Using github for creating my repo , even though Github is a part of Microsoft , it still does not fall into my typical day to day flow .&lt;/li&gt;
 &lt;li&gt;As of writing, sadly I was not able to get a gitgnore in the list of github .gitignore so we will initialize the repo with just a readme&lt;/li&gt;
@@ -54,11 +162,4 @@
 &lt;li&gt;Since Github doe snot have a .gitignore template for  dot net apps, we are gonna use this &lt;a href=&quot;https://raw.githubusercontent.com/OmniSharp/generator-aspnet/master/templates/gitignore.txt&quot;&gt;.gitignore&lt;/a&gt;. This might not be enough , we will see.&lt;/li&gt;
 &lt;li&gt;The app is going to expose one endpoint called &lt;code class=&quot;language-text&quot;&gt;api/environment/iscontainerized&lt;/code&gt;. The controller checks for the environment variable “containerized” and returns if its true or false. If you run the app , it should return false.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;End State: &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms/tree/1CreateApp&quot;&gt;The repo at the end of Part 1&lt;/a&gt;  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[Running Dot Net Core outside MS ecosystem - 2]]></title><description><![CDATA[Dockerize the app Follow directions here As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1 Create an asp.net…]]></description><link>https://abhikmitra.github.io/blog/dotnet-app2/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/dotnet-app2/</guid><pubDate>Mon, 13 Apr 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;Dockerize the app&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Follow directions &lt;a href=&quot;https://docs.docker.com/engine/examples/dotnetcore/&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;As of writing, this pointed to images of dot net core v2.2. Replace it with 3.1&lt;/li&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3&gt;Create an asp.net core app&lt;/h3&gt;
 &lt;p&gt;End State: &lt;a href=&quot;https://github.com/abhikmitra/dotnet-outside-ms/tree/1CreateApp&quot;&gt;The repo at the end of Part 1&lt;/a&gt;  &lt;/p&gt;</content:encoded></item></channel></rss>
