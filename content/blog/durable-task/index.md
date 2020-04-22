@@ -29,7 +29,7 @@ We will see whats the process in which Orchestrator provides reliability. We wil
 ```C#
 var instance = client.CreateOrchestrationInstanceAsync(typeof(TestOrchestration), "InstanceId5302", "Test Input").Result;
 ```
-2. This will send a message with event name `ExecutionStarted` message into the Orchestrator queue.There will be other details such as the orchestration name and id , that will help DTF to operate on teh correct instance of orchestration.
+2. This will send a message with event name `ExecutionStarted` message into the Orchestrator queue.There will be other details such as the orchestration name and id , that will help DTF to operate on the correct instance of orchestration.
 
 ```mermaid
 sequenceDiagram
@@ -68,7 +68,7 @@ sequenceDiagram
     Hub->>TestOrchestration: Orchestration Invoked
     Hub-->>Worker: TaskScheduled
 ```
-5. The hub is also listening to the Worker Queue and picks up the `TaskScheduled` message and invokes the TaskActivity. For now lets assume all the TaskActivity does is a console log. So the task is immediately completed. When the task is completed the hub queues TaskCompleted event in the Orchestrator queue.
+5. The hub is also listening to the Worker Queue and picks up the `TaskScheduled` message and invokes the TaskActivity. For now,  let's assume all the TaskActivity does is a console log. So the task is immediately completed. When the task is completed the hub queues TaskCompleted event in the Orchestrator queue.
 ```mermaid
 sequenceDiagram
     Client-->>Orchestrator: ExecutionStarted
@@ -81,7 +81,7 @@ sequenceDiagram
     Hub->>TaskActivity: Task Invoked
     Hub-->>Orchestrator: TaskCompleted
 ```
-6. The Orchestration wakes up moment the hub detects a message in the Orchestrator Queue and *restarts the Orchestration from the beginning*. So all the logs that got printed last time gets printed again. Since this is the second time orchestration is running `Is replaying` is set to *True*.
+6. The Orchestration wakes up, the moment the hub detects a message in the Orchestrator Queue and *restarts the Orchestration from the beginning*. So all the logs that got printed last time gets printed again. Since this is the second time orchestration is running `Is replaying` is set to *True*.
 
  ```mermaid
 sequenceDiagram
@@ -98,8 +98,8 @@ sequenceDiagram
 ```
 
 7. What happens when the the Hub fails in Step #5 while it is running the taskActivity ?
-- In a distributed system , we have to work with teh assumption that the hub can fail any time and so can the task. 
-- The hub does not remove the TaskScheduledEvent unless the TasActivity is complete. So if in case the hub goes down, the service bus message will be present in teh queue. When the hub comes back , it will start from step 5 as if nothing had happened.
+- In a distributed system , we have to work with the assumption that the hub can fail any time and so can the task. 
+- The hub does not remove the TaskScheduledEvent unless the TasActivity is complete. So if in case the hub goes down, the service bus message will be present in the queue. When the hub comes back online, it will start from step 5 as if nothing had happened.
 
 8. What if, the Task itself throws an exception  ? 
 ```mermaid
@@ -110,7 +110,7 @@ sequenceDiagram
     Hub-->>Worker: TaskScheduled
     Worker-->>Hub: Task Scheduled
     Hub->>TaskActivity: Task Invoked
-    Note right of TaskActivity: Throws Exception!
+    Note right of TaskActivity: Throws Exception! <br/>
     Hub-->>Orchestrator: TaskFailed
     Orchestrator-->>Hub: TaskFailed
     Hub->>TestOrchestration: Orchestration Invoked
@@ -125,4 +125,4 @@ sequenceDiagram
 9. How does DTF remember the results of each task Activity ?
 
 -  DTF serializes all the events into orchestration messages (Session State) that it puts in service bus. For eg,
-![Serialized state](./serializedState.PNG) all of this tasks is serialized into the messages.
+![Serialized state](./serializedState.PNG) all of the tasks are serialized into messages.
