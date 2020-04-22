@@ -99,8 +99,8 @@ sequenceDiagram
 ```
 
 7. What happens when the the Hub fails in Step #5 while it is running the taskActivity ?
-- In a distributed system , we have to work with the assumption that the hub can fail any time and so can the task. 
-- The hub does not remove the TaskScheduledEvent unless the TasActivity is complete. So if in case the hub goes down, the service bus message will be present in the queue. When the hub comes back online, it will start from step 5 as if nothing had happened.
+    - In a distributed system , we have to work with the assumption that the hub can fail any time and so can the task. 
+    - The hub does not remove the TaskScheduledEvent unless the TasActivity is complete. So if in case the hub goes down, the service bus message will be present in the queue. When the hub comes back online, it will start from step 5 as if nothing had happened.
 
 8. What if, the Task itself throws an exception  ? 
 ```mermaid
@@ -125,5 +125,4 @@ sequenceDiagram
 
 9. How does DTF remember the results of each task Activity ?
 
--  DTF serializes all the events into orchestration messages (Session State) that it puts in service bus. For eg,
-![Serialized state](./serializedState.PNG) all of the tasks are serialized into messages.
+    -  DTF serializes all the events into orchestration messages (Session State) that it puts in service bus. For eg, ![Serialized state](./serializedState.PNG) all of the tasks are serialized into messages.
