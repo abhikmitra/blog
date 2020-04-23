@@ -1,14 +1,20 @@
 ---
-title: Durable Task Framework Internals
+title: Durable Task Framework Internals - Part 1 (Dataflow and Reliability)
 date: "2020-04-23T18:00:00.284Z"
 description: "Deepdive into inner workings of DTF"
+---
+### Durable Task Framework Series
+This is part 1 of a series of posts on DTF.
+1. [Durable Task Framework Internals - Part 1 (Dataflow and Reliability)](https://abhikmitra.github.io/blog/durable-task/)
+2. [Durable Task Framework Internals - Part 1 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
+
 ---
 
 ### Durable Task Framework
 
 The Durable Task Framework is an orchestration framework for dot net apps. You can read more about it in their official [github repo](https://github.com/Azure/durabletask). This [channel 9 video](https://channel9.msdn.com/Shows/On-NET/Building-workflows-with-the-Durable-Task-Framework) does a pretty good job of explaining about the framework.
 
-While I was reading through the materials , I felt the literature out their treated the system as a blackbox and I could'nt find any material on the web on how does DTF works under the hood. So I cloned DTF repo and added console logs to understand how it works. The following details apply to [DurableTask.Core](https://www.nuget.org/packages/DurableTask.Core/) version 2.0.0.6 which maps to commit id `0a93eba6c9692f52776dac0f3741eccad3293ef6` in the DTF Github repo.
+While I was reading through the materials , I felt the literature out their treated the system as a blackbox and I couldn't find any material on the web on how does DTF works under the hood. So I cloned DTF repo and added console logs to understand how it works. The following details apply to [DurableTask.Core](https://www.nuget.org/packages/DurableTask.Core/) version 2.0.0.6 which maps to commit id `0a93eba6c9692f52776dac0f3741eccad3293ef6` in the DTF Github repo.
 
 ### Setup
 My setup has 2 console apps , DTFDemoWorker and DTFClient. DTFDemoWorker houses the hubWorker and creates the resources. I have 1 Orchestration called a TestOrchestration which does 2 activities, testActivity1 and TestActivity2 both of which console logs to the console and waits for sometime to simulate some work being done.
@@ -23,7 +29,7 @@ When we create the resources DTF creates 3 Queues in the Service Bus
 
 ### Steps
 
-We will see whats the process in which Orchestrator provides reliability. We will ignore the tracking Queue for now and add that later. To kepe the diagrams simple , lets assume we just have 1 Task that gets invoked.
+We will see whats the process in which Orchestrator provides reliability. We will ignore the tracking Queue for now and add that later. To kepe the diagrams simple , let's assume we have 1 Task that gets invoked.
 
 1. We start the process with the following code from the Client.
 ```C#
