@@ -126,7 +126,3 @@ sequenceDiagram
     Hub-->>Worker: TaskScheduled
     note left of TestOrchestration: Happy path restarts
 ```
-
-9. How does DTF remember the results of each task Activity ?
-
-    -  DTF serializes all the events into orchestration messages (Session State) that it puts in service bus. For eg, ![Serialized state](./serializedState.PNG) all of the tasks are serialized into messages.
