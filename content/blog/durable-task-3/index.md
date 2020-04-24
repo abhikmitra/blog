@@ -172,4 +172,4 @@ Client-->>Orchestrator: ExecutionStarted
     Hub->>JumpStart Table: Deletes the entry
     ```  
     The Hub looks for situations where the entity is present in the Jump Start table but has not arrived through Service Bus for 10 minutes. Then it queues the ExecutionStarted event itself. It keeps repeating this process and trying to jump-start the orchestration until it finds the orchestration in the instanceHistory table
-5. The jump start is not a replacement for the Service Bus. It is only protecting against the dual write situation by becoming eventually consistent in case of a failure
+5. The jump start is not a replacement for the Service Bus. It is only protecting against the dual write situation by becoming eventually consistent in case of a failure. Of course, you only have this problem when instance tracking is enabled. If you do not have an Azure Table storage , then you would not run into the Dual Write scenarios at all.
