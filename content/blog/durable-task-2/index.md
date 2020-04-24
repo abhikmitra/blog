@@ -7,6 +7,7 @@ description: "Deep-dive into inner workings of DTF - Part 2."
 This post is part 2 of a series of posts on DTF.
 1. [Durable Task Framework Internals - Part 1 (Dataflow and Reliability)](https://abhikmitra.github.io/blog/durable-task/)
 2. [Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
+3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History and Jump Start)](https://abhikmitra.github.io/blog/durable-task-3/)
 
 ---
  
