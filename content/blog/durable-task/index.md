@@ -4,10 +4,14 @@ date: "2020-04-23T18:00:00.284Z"
 description: "Deep-dive into inner workings of DTF"
 ---
 ### Durable Task Framework Series
-This post is part 1 of a series of posts on DTF.
+This post is **part 1** of a series of posts on DTF.
 1. [Durable Task Framework Internals - Part 1 (Dataflow and Reliability)](https://abhikmitra.github.io/blog/durable-task/)
 2. [Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
-3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History and Jump Start)](https://abhikmitra.github.io/blog/durable-task-3/)
+3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History, and JumpStart)](https://abhikmitra.github.io/blog/durable-task-3/)
+4. [Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)](https://abhikmitra.github.io/blog/durable-task-4/)
+
+Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know
+
 ---
 
 ### Durable Task Framework
@@ -31,7 +35,7 @@ When we create the resources DTF creates 3 Queues in the Service Bus
 We will see whats the process in which Orchestrator provides reliability. We will ignore the tracking Queue for now and add that later. To kepe the diagrams simple , let's assume we have 1 Task that gets invoked.
 
 1. We start the process with the following code from the Client.
-```C#
+```csharp
 var instance = client.CreateOrchestrationInstanceAsync(typeof(TestOrchestration), "InstanceId5302", "Test Input").Result;
 ```
 2. This will send a message with event name `ExecutionStarted` message into the Orchestrator queue.There will be other details such as the orchestration name and id , that will help DTF to operate on the correct instance of orchestration.
@@ -53,7 +57,7 @@ sequenceDiagram
 ```
 
 4. Assume the orchestration code is as below. The orchestration runs till `scheduleWithRetry` and prints `Running Orchestration` into the console. Since this is the first time orchestration is running `Is replaying` is set to false. 
-```C#
+```csharp
 Console.WriteLine("Is Replaying =" + context.IsReplaying);
 Console.WriteLine("Running Orchestration");
 await context.ScheduleWithRetry<bool>(typeof(TestActivity1), options, "");

@@ -4,10 +4,13 @@ date: "2020-04-25T18:00:00.284Z"
 description: "Deep-dive into inner workings of DTF - Part 3."
 ---
 ### Durable Task Framework Series
-This post is part 3 of a series of posts on DTF.
+This post is **part 3** of a series of posts on DTF.
 1. [Durable Task Framework Internals - Part 1 (Dataflow and Reliability)](https://abhikmitra.github.io/blog/durable-task/)
 2. [Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
 3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History, and JumpStart)](https://abhikmitra.github.io/blog/durable-task-3/)
+4. [Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)](https://abhikmitra.github.io/blog/durable-task-4/)
+
+Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know
 
 ---
 

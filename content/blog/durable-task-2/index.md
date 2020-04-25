@@ -4,10 +4,13 @@ date: "2020-04-24T18:00:00.284Z"
 description: "Deep-dive into inner workings of DTF - Part 2."
 ---
 ### Durable Task Framework Series
-This post is part 2 of a series of posts on DTF.
+This post is **part 2** of a series of posts on DTF.
 1. [Durable Task Framework Internals - Part 1 (Dataflow and Reliability)](https://abhikmitra.github.io/blog/durable-task/)
 2. [Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
-3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History and Jump Start)](https://abhikmitra.github.io/blog/durable-task-3/)
+3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History, and JumpStart)](https://abhikmitra.github.io/blog/durable-task-3/)
+4. [Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)](https://abhikmitra.github.io/blog/durable-task-4/)
+
+Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know
 
 ---
  
@@ -47,7 +50,7 @@ sequenceDiagram
 ### The curious case of Orchestrations 
 So we have  the same Orchestration getting invoked 3 times. Curiously only once the orchestration finishes while others dont seem to do anything.
 Lets look at the orchestration code.
-```C#
+```csharp
 
     Console.Writeline("Orchestration Started");
     var task1 = context.ScheduleWithRetry<bool>(typeof(TestActivity1), options, "Test Input1");
