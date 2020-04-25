@@ -1,7 +1,7 @@
 ---
 title: Durable Task Framework Internals - Part 1 (Dataflow and Reliability)
 date: "2020-04-23T18:00:00.284Z"
-description: "Deep-dive into inner workings of DTF"
+description: "In this post we take a detailed look at the data flow and how does Durable Task Framework reliably execute the Tasks"
 ---
 ### Durable Task Framework Series
 This post is **part 1** of a series of posts on DTF.

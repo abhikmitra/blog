@@ -1,7 +1,7 @@
 ---
 title: Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)
 date: "2020-04-24T18:00:00.284Z"
-description: "Deep-dive into inner workings of DTF - Part 2."
+description: "A look into how are Orchestrations handled by the framework. A good knowledge of orchestrations is essential in figuring out what can and cannot go in orchestrations"
 ---
 ### Durable Task Framework Series
 This post is **part 2** of a series of posts on DTF.

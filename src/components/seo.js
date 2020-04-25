@@ -18,7 +18,10 @@ const SEO = ({ description, lang, meta, title }) => {
           siteMetadata {
             title
             description
-            social { twitter }
+            social { 
+              twitter
+              linkedin
+             }
           }
         }
       }
@@ -66,6 +69,10 @@ const SEO = ({ description, lang, meta, title }) => {
         {
           name: `twitter:description`,
           content: metaDescription,
+        },
+        {
+          name: `linkedIn`,
+          content: "https://www.linkedin.com/in/iamabhik/",
         },
       ].concat(meta)}
     />

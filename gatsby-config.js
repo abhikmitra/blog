@@ -6,10 +6,11 @@ module.exports = {
       name: `Abhik Mitra`,
       summary: `who lives in Bangalore and loves building and learning new things.`,
     },
-    description: `A place to pen down what I think`,
+    description: `A place to pen down and share what I learn`,
     siteUrl: `https://abhikmitra.github.io/blog`,
     social: {
       twitter: `complancoder`,
+      linkedin: `https://www.linkedin.com/in/iamabhik/`
     },
   },
   plugins: [
@@ -52,7 +53,7 @@ module.exports = {
             }
           },
           `gatsby-remark-copy-linked-files`,
-          `gatsby-remark-smartypants`,
+          `gatsby-remark-smartypants`
         ],
       },
     },
@@ -61,7 +62,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        trackingId: `UA-164581916-1`,
       },
     },
     `gatsby-plugin-feed`,

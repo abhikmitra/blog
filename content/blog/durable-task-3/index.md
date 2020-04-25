@@ -1,7 +1,7 @@
 ---
 title: Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History, and JumpStart)
 date: "2020-04-25T18:00:00.284Z"
-description: "Deep-dive into inner workings of DTF - Part 3."
+description: "We look at the tracking features provided by DTF and what role does Azure Table store play in DTF"
 ---
 ### Durable Task Framework Series
 This post is **part 3** of a series of posts on DTF.

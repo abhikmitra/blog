@@ -1,7 +1,7 @@
 ---
 title: Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)
 date: "2020-04-27T18:00:00.284Z"
-description: "Deep-dive into inner workings of DTF - Part 4."
+description: "In this part we look at how the framework handles cancellations and middlewares"
 ---
 ### Durable Task Framework Series
 This post is **part 4** of a series of posts on DTF.
