@@ -1,6 +1,6 @@
 ---
 title: Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)
-date: "2020-04-27T18:00:00.284Z"
+date: "2020-04-26T18:00:00.284Z"
 description: "In this part we look at how the framework handles cancellations and middlewares"
 ---
 ### Durable Task Framework Series
@@ -9,6 +9,8 @@ This post is **part 4** of a series of posts on DTF.
 2. [Durable Task Framework Internals - Part 2 (The curious case of Orchestrations)](https://abhikmitra.github.io/blog/durable-task-2/)
 3. [Durable Task Framework Internals - Part 3 (Tracker Queue, Instance History, and JumpStart)](https://abhikmitra.github.io/blog/durable-task-3/)
 4. [Durable Task Framework Internals - Part 4 (Terminated Orchestrations & Middlewares)](https://abhikmitra.github.io/blog/durable-task-4/)
+5. [Durable Task Framework Internals - Part 5 (Interesting usages of TPL in DTF)](https://abhikmitra.github.io/blog/durable-task-5/)
+6. [Durable Task Framework Internals - Part 6 (Orchestration Execution Flow)](https://abhikmitra.github.io/blog/durable-task-5/)
 
 Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know.
 
@@ -74,7 +76,7 @@ sequenceDiagram
 ```
 The middlewares get invoked in the same thread as Tasks, and they individually do not have any reliability. There is no state marker to show middleware was run successfully, but the Task failed. Middlewares get invoked for all tasks irrespective if the Task had failed in its previous run or not. It is agnostic to the Task triggering the middleware.
 
-Also, the middleware cannot be used to handle task failures. You cannot put a try-catch around the `next()` call. The Exceptions thrown by the Task are caught and swallowed by the framework in the *TaskDispatcher* part of the code, and the middlewares do not receive it.
+Also, the middleware cannot be used to handle task failures. You cannot put a try-catch around the `next()` call. The Exceptions thrown by the Task are caught and swallowed by the framework in the *TaskActivityDispatcher* part of the code, and the middlewares do not receive it.
 
 #### Potential Gotcha!
 Middlewares, if they fail, will fail the Task as well. Interestingly , such failures **do not trigger the `TaskFailed` event**. But since the TaskScheduled message is not removed from the queue, the Hub keeps retrying and gives up when the limit is reached. Since the TaskFailed event was not generated, Azure Table Storage would also not show that the Task had failed. 
