@@ -52,16 +52,16 @@ sequenceDiagram
 ### The curious case of Orchestrations 
 So we have  the same Orchestration getting invoked 3 times. Curiously only once the orchestration finishes while others dont seem to do anything.
 Lets look at the orchestration code.
+
 ```csharp
+Console.Writeline("Orchestration Started");
+var task1 = context.ScheduleWithRetry<bool>(typeof(TestActivity1), options, "Test Input1");
+var task2 = context.ScheduleWithRetry<bool>(typeof(TestActivity2), options, "Test Input2");
 
-    Console.Writeline("Orchestration Started");
-    var task1 = context.ScheduleWithRetry<bool>(typeof(TestActivity1), options, "Test Input1");
-    var task2 = context.ScheduleWithRetry<bool>(typeof(TestActivity2), options, "Test Input2");
-
-    var result1 =  await task1;
-    var result2 = await task2;
-    Console.Writeline("Orchestration Finished");
-    return result;
+var result1 =  await task1;
+var result2 = await task2;
+Console.Writeline("Orchestration Finished");
+return result;
 ```
 
 - **First** time Orchestration starts - Replay False - Starts due to TaskCompleted event from the client
@@ -84,7 +84,8 @@ So, in general, for any orchestration, we will have n number of unfinished Orche
 ### Incomplete Orchestrations
 
 The orchestrations seem to magically disappear after they encounter `await`, i.e. if Task1 is in flight.
-```
+
+```csharp
    var result1 =  await task1;
 ```
 
