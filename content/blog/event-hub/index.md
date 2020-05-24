@@ -1,12 +1,12 @@
 ---
-title: Event Hub SDK Internals
+title: Azure Event Hub SDK Internals
 date: "2020-05-24T18:00:00.284Z"
 description: "In this post, we will take a look at how the Azure Event hub works internally."
 ---
 ## Event Hub SDK Internals
 
 
-Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters. YOu can read more about Event Hubs [here](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about)
+Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters. You can read more about Event Hubs [here](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about)
 
 ### Event processor 
 We will start with the Event Hub Processor. There are 4 steps to receiving an event and we will dive into the details of each of the areas.
@@ -15,7 +15,7 @@ We will start with the Event Hub Processor. There are 4 steps to receiving an ev
 
 Here is a typical code that you would use for registering an event processor.
 
-```charp
+```csharp
 var eventProcessorHost = new EventProcessorHost(
                 EventHubName,
                 PartitionReceiver.DefaultConsumerGroupName,
