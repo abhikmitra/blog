@@ -9,7 +9,7 @@ description: "In this post, we will deepdive into the partition Manager with a s
 This post is **part 2** of a series of posts on Azure Event Hub SDK for Dot NET.
 1. [Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)](https://abhikmitra.github.io/blog/event-hub/)
 2. [Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
-
+3. [Azure Event Hub SDK Internals - Part 3 (Pumping Data & AMQP Links)](https://abhikmitra.github.io/blog/event-hub-3/)
 Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know.
 
 ---
@@ -120,5 +120,5 @@ Once the above code finds a lease, it starts the process of stealing the lease.
 - The code calls into `ChangeLeaseAsync` using the token present in the blob to switch over the lease and generate a new token. 
 - The previous host now loses access to the lease.
 
-
+Now all of this lease management keeps happening in a loop until Cancellation is requested by calling into `Unregister`.
 

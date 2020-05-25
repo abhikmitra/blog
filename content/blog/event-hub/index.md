@@ -8,7 +8,7 @@ description: "In this post, we will take a look at how the Azure Event hub works
 This post is **part 1** of a series of posts on Azure Event Hub SDK for Dot NET.
 1. [Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)](https://abhikmitra.github.io/blog/event-hub/)
 2. [Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
-
+3. [Azure Event Hub SDK Internals - Part 3 (Pumping Data & AMQP Links)](https://abhikmitra.github.io/blog/event-hub-3/)
 Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know.
 
 ---
@@ -18,7 +18,9 @@ Azure Event Hubs is a big data streaming platform and event ingestion service. I
 The series focusses on [Microsoft.Azure.EventHubs](https://www.nuget.org/packages/Microsoft.Azure.EventHubs/) SDK - v4.2. This maps to [Azure SDK for net](https://github.com/Azure/azure-sdk-for-net) commit Id `00d8f23cffe22afb0e574909039556d8ca891be9`
 
 ## Event processor 
-We will start with the Event Hub Processor. There are 4 steps to receiving an event and we will dive into the details of each of the areas.
+We will focus on the Event Hub Processor since that is the part which deals with checkpointing , leasing , etc. 
+
+There are 2 broad steps to receiving an event and we will dive into the details of each of the areas.
 
 ### RegisterEventProcessorAsync - Initialization
 
@@ -131,5 +133,5 @@ Overall there are 3 sections in Azure Event Hub
 
 1. Partition Manager - This takes care of Lease Management & Creation of Pumps 
 2. Event Hub Partition Pump - This is responsible for pushing the events to the Event Processor
-3. AMQPPartitionReceiver - THis handles the AMQP side of things when receiving a message.
+3. AMQPPartitionReceiver - This handles the AMQP side of things when receiving a message.
 
