@@ -1,7 +1,7 @@
 ---
 title: Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)
 date: "2020-05-24T18:00:00.284Z"
-description: "In this post, we will deepdive into the partition Manager with a special focus on Lease Managemnt"
+description: "In this post, we will deepdive into the partition Manager with a special focus on Lease Management"
 ---
 
 
