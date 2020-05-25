@@ -10,6 +10,7 @@ This post is **part 2** of a series of posts on Azure Event Hub SDK for Dot NET.
 1. [Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)](https://abhikmitra.github.io/blog/event-hub/)
 2. [Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
 3. [Azure Event Hub SDK Internals - Part 3 (Pumping Data & AMQP Links)](https://abhikmitra.github.io/blog/event-hub-3/)
+
 Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know.
 
 ---
