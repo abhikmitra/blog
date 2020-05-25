@@ -1,10 +1,20 @@
 ---
-title: Azure Event Hub SDK Internals
-date: "2020-05-24T18:00:00.284Z"
-description: "In this post, we will take a look at how the Azure Event hub works internally."
+title: Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)
+date: "2020-05-23T18:00:00.284Z"
+description: "In this post, we will take a look at how the Azure Event hub works internally, look at sequence diagrams and understand teh general architecture"
+---
+
+## Azure Event Hub SDK Series
+This post is **part 1** of a series of posts on Azure Event Hub SDK for Dot NET.
+1. [Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)](https://abhikmitra.github.io/blog/event-hub/)
+2. [ Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
+
+Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know
 ---
 
 Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters. You can read more about Event Hubs [here](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about)
+
+The series focusses on [Microsoft.Azure.EventHubs](https://www.nuget.org/packages/Microsoft.Azure.EventHubs/) SDk - v4.2. This maps to [Azure SDK for net](https://github.com/Azure/azure-sdk-for-net) commit Id `00d8f23cffe22afb0e574909039556d8ca891be9`
 
 ## Event processor 
 We will start with the Event Hub Processor. There are 4 steps to receiving an event and we will dive into the details of each of the areas.
