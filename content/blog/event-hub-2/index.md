@@ -6,11 +6,12 @@ description: "In this post, we will deepdive into the partition Manager with a s
 
 
 ## Azure Event Hub SDK Series
-This post is **part 1** of a series of posts on Azure Event Hub SDK for Dot NET.
+This post is **part 2** of a series of posts on Azure Event Hub SDK for Dot NET.
 1. [Azure Event Hub SDK Internals - Part 1 (Overview & Control Flow)](https://abhikmitra.github.io/blog/event-hub/)
-2. [ Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
+2. [Azure Event Hub SDK Internals - Part 2 (Partition Manager & Lease Management)](https://abhikmitra.github.io/blog/event-hub-2/)
 
-Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know
+Do you think there is more that I should cover or something I should fix ? Please raise an [issue](https://github.com/abhikmitra/blog/issues) and let me know.
+
 ---
 
 
