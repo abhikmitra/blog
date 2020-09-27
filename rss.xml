@@ -1,4 +1,220 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down and share what I learn]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 10 Sep 2020 16:07:03 GMT</lastBuildDate><item><title><![CDATA[Cracking the System Design Interview]]></title><description><![CDATA[This post is supplemented by a Youtube series of System Design Interviews What to expect from a system Design Interview Complete Mock…]]></description><link>https://abhikmitra.github.io/blog/sys-des/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/sys-des/</guid><pubDate>Tue, 25 Aug 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This post is supplemented by a Youtube series of System Design Interviews&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Abhik's Blog]]></title><description><![CDATA[A place to pen down and share what I learn]]></description><link>https://abhikmitra.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 27 Sep 2020 10:01:38 GMT</lastBuildDate><item><title><![CDATA[Learning HackLang - Building a Web server in hack]]></title><description><![CDATA[Web Server in Hack When I started learning Hack, one of the problems I ran into was the lack of Open Source projects(Web Servers) in Hack. I…]]></description><link>https://abhikmitra.github.io/blog/hack-php/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/hack-php/</guid><pubDate>Sun, 27 Sep 2020 18:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;Web Server in Hack&lt;/h2&gt;
+&lt;p&gt;When I started learning Hack, one of the problems I ran into was the lack of Open Source projects(Web Servers) in Hack. I was not able to find examples or a guide on how to set up a barebones web server. This post will breakdown the process of getting started building a small webserver. This assumes that you know the syntax and the concepts. The documentation is great when it comes to explaining the features of the language, so that’s out of scope for this post. &lt;/p&gt;
+&lt;p&gt;The completed project can be found &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server&quot;&gt;here&lt;/a&gt; &lt;/p&gt;
+&lt;p&gt;Do you think there is more that I should cover or something I should fix? Please raise an &lt;a href=&quot;https://github.com/abhikmitra/blog/issues&quot;&gt;issue&lt;/a&gt; and let me know.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Before starting hack, I had worked majorly on Typescript (Javascript), C#, and Java. If you have worked on those languages, this post will be more relevant as I draw a comparison with those stacks.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Disclaimer&lt;/strong&gt; - This post was a part of my Learning exercise, this should not be taken as best practice or the correct way to write code in Hack. If you are also trying to get your hands dirty with &lt;a href=&quot;https://hacklang.org/&quot;&gt;hacklang&lt;/a&gt;, this should be useful&lt;/p&gt;
+&lt;h3&gt;Setting up the repo&lt;/h3&gt;
+&lt;p&gt;Before you start, I am assuming you have already gone through the Official &lt;a href=&quot;https://docs.hhvm.com/hack/getting-started/getting-started&quot;&gt;Getting Started&lt;/a&gt; tutorial.&lt;/p&gt;
+&lt;h4&gt;Autoload&lt;/h4&gt;
+&lt;p&gt;This was a new concept for me. In NodeJs we explicitly require the files and the engine travels the interpreter and loads all the files. In C#, including files was never a problem since the IDE generates the project &amp;#x26; solution files. In Hack, you can go the “require each file” route but configuring Autoloader is the best practice. So you need to create a &lt;code class=&quot;language-text&quot;&gt;hh_autoload.json&lt;/code&gt;. Steps are detailed &lt;a href=&quot;https://docs.hhvm.com/hack/getting-started/starting-a-real-project&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now the file itself insufficient for the hack interpreter to autoload everything. There are two more steps that you need to be aware of. Firstly, when you add anything to composer.json the autoload files are generated inside the vendor folder as shown below  &lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 590px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/b6d50d9f2f386517c239821daf7c304e/47218/autoload.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 31.08108108108108%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAGCAYAAADDl76dAAAACXBIWXMAAAsSAAALEgHS3X78AAABAklEQVQY03WQ6U7EIBRG+x52ZV8KdGHacTTRxPd/ps8LTTST6I8TCimHA03OB2JM4FxCCFUp38ZYpBihlIYUElqbSplPE8M4Tn/SHLcTISQwJp6EjHNIGrX1ECSfGEkYbZpGdF33L00KpcI8FQoqYoxDkcglD+6oStOakRg4Q9t2aGlzGV/aS9T3faWJfobTpUBU6YWoQu8sluBgtYARDIrQBKdSIzicEpVpHH6kTd4y9nWHtTO9m6d3coStlcEafB0rPon3PeKeNzyItzXgQWzewitZD/gV7idyPuFcqNIiK5RCSz9/3BbcF4/XdSbJjHuakan6jB6rMzCS18JhuK78DapRrdEFh0rKAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Autoload&quot;
+        title=&quot;Autoload&quot;
+        src=&quot;/blog/static/b6d50d9f2f386517c239821daf7c304e/fcda8/autoload.png&quot;
+        srcset=&quot;/blog/static/b6d50d9f2f386517c239821daf7c304e/12f09/autoload.png 148w,
+/blog/static/b6d50d9f2f386517c239821daf7c304e/e4a3f/autoload.png 295w,
+/blog/static/b6d50d9f2f386517c239821daf7c304e/fcda8/autoload.png 590w,
+/blog/static/b6d50d9f2f386517c239821daf7c304e/efc66/autoload.png 885w,
+/blog/static/b6d50d9f2f386517c239821daf7c304e/c83ae/autoload.png 1180w,
+/blog/static/b6d50d9f2f386517c239821daf7c304e/47218/autoload.png 1344w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt; &lt;/p&gt;
+&lt;p&gt;The autoload file is simply a huge dictionary that has a mapping between the class name(including the namespace) and their corresponding path. So when you use &lt;code class=&quot;language-text&quot;&gt;use HackFacebook\UiServer\Http&lt;/code&gt; statement, the interpreter checks this file to figure out the actual location of the hack file. So you need to make sure this is updated, especially when you add new files or move stuff around.
+The Hacklang doc says to use &lt;code class=&quot;language-text&quot;&gt;vendor/bin/hh-autoload&lt;/code&gt; to regenerate the map. I used &lt;code class=&quot;language-text&quot;&gt;composer dump-autoload&lt;/code&gt; to regenerate the file and it worked fine.&lt;/p&gt;
+&lt;h4&gt;Composer&lt;/h4&gt;
+&lt;p&gt;Composer is the PHP package management solution. If you are coming from Nodejs background, this is exactly like NPM with its &lt;code class=&quot;language-text&quot;&gt;package.json&lt;/code&gt;(composer.json) and &lt;code class=&quot;language-text&quot;&gt;package-lock.json&lt;/code&gt;(composer.lock) so no surprises there.&lt;/p&gt;
+&lt;h4&gt;hhconfig&lt;/h4&gt;
+&lt;p&gt;You would need a &lt;code class=&quot;language-text&quot;&gt;hhconfig&lt;/code&gt; file. The &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server/blob/master/ui-server/.hhconfig&quot;&gt;one I used&lt;/a&gt; was also pretty barebones. Before you can use FixMe codes to override the hh&lt;em&gt;client errors you need to declare the allowed fixme&lt;/em&gt;codes in the config. this is a recent change in June 2020. You can read more about this change &lt;a href=&quot;https://hhvm.com/blog/2020/06/16/hhvm-4.62.html&quot;&gt;here in HHVM releases&lt;/a&gt;.&lt;/p&gt;
+&lt;h4&gt;config&lt;/h4&gt;
+&lt;p&gt;You would need a &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server/blob/master/ui-server/config.ini&quot;&gt;config.ini&lt;/a&gt;. It will have a config for your web server. Could be any name, you need to specify when you start your server.&lt;/p&gt;
+&lt;h4&gt;Debugging &amp;#x26; Development&lt;/h4&gt;
+&lt;p&gt;I used the &lt;a href=&quot;https://github.com/slackhq/vscode-hack&quot;&gt;vscode-hack&lt;/a&gt; by Slack. It only works if the root is a Hack project. For example, if you open the top-level folder in the &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server&quot;&gt;repo&lt;/a&gt; through VScode the plugin won’t work. But instead, if you open the [ui-Server](&lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server/tree/master/ui-server&quot;&gt;https://github.com/abhikmitra/hack-memcache-mysql-web-server/tree/master/ui-server&lt;/a&gt; , the plugin will work and you should be able to see red squiggly lines for errors.
+So if you are starting on a hack project, make sure the root that you open in VS code has the hhconfig,hh_autload, and vendor. &lt;/p&gt;
+&lt;p&gt;Also, to get type errors in VS code you need to have hh_client daemon running. starting it is simple &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre style=&quot;counter-reset: linenumber NaN&quot; class=&quot;language-text line-numbers&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;hh_client start&lt;/code&gt;&lt;span aria-hidden=&quot;true&quot; class=&quot;line-numbers-rows&quot; style=&quot;white-space: normal; width: auto; left: 0;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Sometimes I saw it git frozen or the hints not working properly. A simple restart of the hh_client fixed the problem.&lt;/p&gt;
+&lt;p&gt;So now you all you need is to add an &lt;a href=&quot;https://docs.hhvm.com/hack/getting-started/starting-a-real-project&quot;&gt;entry point&lt;/a&gt; and you should have a basic scaffolding for some Hack code. You can find the finished scaffolding &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server/tree/master/scaffolding-generic&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;Creating the Webserver&lt;/h3&gt;
+&lt;p&gt;Now that we have a functioning repo setup, let’s look at how to create a web server.
+The overall request flow looks like this. If you are from an &lt;code class=&quot;language-text&quot;&gt;ASP.NET&lt;/code&gt; background the #1 part will look strange to you as that is something that the Framework takes care of and not something you think of.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 590px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/29229/arch.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 39.189189189189186%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsSAAALEgHS3X78AAAA20lEQVQoz3VSCw7DIAj1/kdtmqx+WtsiMh/WRTdHQkJ4H6jUyBM551ZoPSSzQtY6CWHXmjkL5zEpsZgmQhz7LolIDb6TSt9uVpZlkXVd5TxP7RHdct+3LoIhRroA+C9ijLKHoOLruiSlpAZYBr38bGlAROq0AsTj0OkQgIgaBlrHWoPfvorL9qEMgo4oifHei3OuEkvTWqsEGEAI/Ch93bA8CTBw+HlXDAYnBF8Nh+9qh5kEzCBsB8wTrr5hD86O0TIlUtPXtslWsm3Y6wfDj+nst+mweln64TfDN6L5dqzPClPjAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Architecture&quot;
+        title=&quot;Architecture&quot;
+        src=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/fcda8/arch.png&quot;
+        srcset=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/12f09/arch.png 148w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/e4a3f/arch.png 295w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/fcda8/arch.png 590w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/efc66/arch.png 885w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/29229/arch.png 1167w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+Another strange aspect was the router setup encourages that each controller only handles one action. So the same controller cannot handle multiple requests.&lt;/p&gt;
+&lt;h4&gt;Request Routing&lt;/h4&gt;
+&lt;p&gt;Here the framework itself does not do any routing and the user needs to be explicit about the routing. That is what Facebook has come up with a &lt;code class=&quot;language-text&quot;&gt;CodeGen&lt;/code&gt; that generates the code for a router. Codegens seemed to be pretty common in the Hack ecosystem. That is why it is fairly common to have a scripts folder
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 330px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/8096378bc849c4d77f651d3db466daae/d9ecf/script.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 205.4054054054054%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAApCAYAAAA1bQl+AAAACXBIWXMAAAsSAAALEgHS3X78AAAFQ0lEQVRIx5VXS28aZxRFXSSRukgrNVIUsI2ZGWZgeAxgjG0GTAAb8ANjsA1+xa9ajl21kZooTdRWXUSRIlWquuuuUvtHT79zyVCTmJgsLt/HN8yZ+zj33MFnmhYcJwXLiqBYXEQ2O4tyuYxKpYpCoYjl5RqSSQeapsMwwreaj4CpVBqxWBybm208flzG3t6+7FdWVrC/v68AkwiFtPEA+REOm/JlejqEQGACjx75lQVk9fsn5JzXdd24HZBg9C6Xm0M0amNtbR3b29totztq3cHTp5fI590B6FiAth2THHK/sJCXXBYKBVmZy0QiOX4OwyqHUQUYidgImwS1YKl9Kp2R86lgCCEBM6Eb5vs1PNJ8lq4hHo0gm05hJpXE2fETHB/s4fvLCzzZ68GJ2dCngwhrIVn7++mR5gukStBzVQRnKjAX6oiV27BKLRiFdeiusvwqrOI6Iu4KjLklaLkl+NU9j5xFWf3OsPnur73E5NZraIdv8XDrV9in72CfvUPq4ndkr/5A6OAN7tSe417jBe43X+Hrjdf4ZvNnfLn6EnfV+d36iyHzPWi9RqDzCg/avwjg3tt/UfvpL3Tf/IP2b3/D/eFPfFF5hjvLPyrgvhHwKwXO/b368yHzTThF2PllmPkG9Pk6HiaKCKTLCGarsk7NVGHM18QsdxVRFbqWLcOfLCCg7vUnh81nqqLEIhZmM2lVFAfnJ0fobDSRTsRVsSwkVMHi6jr3piqMEZoWY5FuMqGNbcdhKsqQJq7qX0e1oq6HhS6aZgysTw3zvY2gjUfsSCQK9jUJzn0sFruRuLe13wCQKkORuLy8kna7uLiA6xYQDE4Pev0zWs8WNbn+dHrL757KcD+2ONDDdDot4dJTWi6Xw/z8gjrPjAX0ESBFlmpTrVZRKj3G4mJJhGF2Nje2MAyFzJsY3sTEpGgidZCrB/bZIc+qEClTBwcHotjdbhdbW9tDIJ8BaEslGTLFlJrIecI9vaa4emBj0YaK3SezgXg8IUOJVaZlMjOi5l7Vx5op5N/2zo4QmsPp9PRMDad+6Lu7ezg7+1ZSQE4S+FMpEA8tS4mobvbbTYXIG73h5RGbXk9NBQd2nZ9DgATK5xOKKpYK3Vb5c4UynCfMIbuFe67Mbf9aUaK6iU4C6LoJ9UPOZwe93q6EubPTxdHRkar0loTPirdaLdnvqPSMmoQSMgeUYRjyRPLQ7w/I6nHSm88Mj+vk5NTIWe3TNFO9eiTRaERVmznodLbFQ3pKLzmfe72eeLi+3pSz3d1dSYOX6w+qbCqgmEq6pvgYlVzR5ubm1YMqElqpVJL8kT5ePtmqN+awT+gYZmZyoNhqIqq6JJ1iwWp6nGSY9IrryCrzg0qz2W4LiU9OToV3x8cnoo2t1qZqx0PU6w15EIHpxHWNvA7qM9/zMBT6v/k9b7y3MnpFj7xi0Dw+ftiSAx4Wi6YShzg2NjZFC6mJzB/zWKvVlJRVsLS0LNLGPq9Wl+Qa0zLkocdDEpuADJEvmVz5FtbpdIR3nU6fj43GipyzFVn1jwD7G1Om2uRkULjHED0+eua1JPNIAC/0j0KOxpPIuItysLq6JsPJ4yGFgvtmc0MAvUJ8WNnhkA2lHlZCHeoqhHV5JWZF6/W68I6cu20MDAHG42EUXEvUhhWlanMwZTIZqbI3pMYdVL5iMYpnz/gvII7Dw0NJOEXh/PwcV1ffqRn9dPAGOyrk4X8BYQNO0lA/DsvbKw9ZOS/5nlKTcyzKbaPAF3GyiMxXEFPF6XZ78tJOrjWbTeEd6cIOYm+zp5mWT+XzP8odA5GlAcHzAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Scripts&quot;
+        title=&quot;Scripts&quot;
+        src=&quot;/blog/static/8096378bc849c4d77f651d3db466daae/d9ecf/script.png&quot;
+        srcset=&quot;/blog/static/8096378bc849c4d77f651d3db466daae/12f09/script.png 148w,
+/blog/static/8096378bc849c4d77f651d3db466daae/e4a3f/script.png 295w,
+/blog/static/8096378bc849c4d77f651d3db466daae/d9ecf/script.png 330w&quot;
+        sizes=&quot;(max-width: 330px) 100vw, 330px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt; &lt;/p&gt;
+&lt;p&gt;So to use the &lt;a href=&quot;https://github.com/hhvm/hack-router-codegen&quot;&gt;hack router codegen&lt;/a&gt;, you need to create a file and provide the following details to your code gen&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Location of controllers&lt;/li&gt;
+&lt;li&gt;Controller base Interface - This is how the codegen finds which classes are controllers and which are not.&lt;/li&gt;
+&lt;li&gt;The name and the filename &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once you run the Codegen, you will have something that looks like this.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;hack&quot;&gt;&lt;pre style=&quot;counter-reset: linenumber NaN&quot; class=&quot;language-hack line-numbers&quot;&gt;&lt;code class=&quot;language-hack&quot;&gt;abstract class AutoGeneratedRouterBase
+  extends \Facebook\HackRouter\BaseRouter&amp;lt;classname&amp;lt;\HackFacebook\UiServer\Controllers\IRoutableController&amp;gt;&amp;gt; {
+
+  &amp;lt;&amp;lt;__Override&amp;gt;&amp;gt;
+  final public function getRoutes(
+  ): ImmMap&amp;lt;\Facebook\HackRouter\HttpMethod, ImmMap&amp;lt;string, classname&amp;lt;\HackFacebook\UiServer\Controllers\IRoutableController&amp;gt;&amp;gt;&amp;gt; {
+    $map = ImmMap {
+      \Facebook\HackRouter\HttpMethod::GET =&amp;gt; ImmMap {
+        &amp;#39;/&amp;#39; =&amp;gt; \HackFacebook\UiServer\Controllers\Pages\HomePageController::class,
+        &amp;#39;/login&amp;#39; =&amp;gt;
+          \HackFacebook\UiServer\Controllers\Pages\LoginPageController::class,
+        &amp;#39;/signUp&amp;#39; =&amp;gt;
+          \HackFacebook\UiServer\Controllers\Pages\SignUpPageController::class,
+      },
+      \Facebook\HackRouter\HttpMethod::POST =&amp;gt; ImmMap {
+        &amp;#39;/login&amp;#39; =&amp;gt;
+          \HackFacebook\UiServer\Controllers\API\LoginPostController::class,
+        &amp;#39;/signUp&amp;#39; =&amp;gt;
+          \HackFacebook\UiServer\Controllers\API\SignUpPostController::class,
+      },
+    };
+    return $map;
+  }
+}&lt;/code&gt;&lt;span aria-hidden=&quot;true&quot; class=&quot;line-numbers-rows&quot; style=&quot;white-space: normal; width: auto; left: 0;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is simply a map of the route and the class. You can handroll this too using Facebook’s &lt;a href=&quot;https://github.com/hhvm/hack-router&quot;&gt;HackRouter&lt;/a&gt; . The way the router figures out this mapping is through the interfaces that the controller implements. For example, if the class implements &lt;code class=&quot;language-text&quot;&gt;Facebook\HackRouter\SupportsGetRequests&lt;/code&gt; that means the class will be used to get calls. Similarly, each controller needs to override &lt;code class=&quot;language-text&quot;&gt;getUriPattern&lt;/code&gt;  for the codegen to understand which route does this controller serve.&lt;/p&gt;
+&lt;h4&gt;Controllers and Views&lt;/h4&gt;
+&lt;p&gt;We will now talk about Part 2 of the section. &lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto;  max-width: 590px;&quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/29229/arch.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 39.189189189189186%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAICAYAAAD5nd/tAAAACXBIWXMAAAsSAAALEgHS3X78AAAA20lEQVQoz3VSCw7DIAj1/kdtmqx+WtsiMh/WRTdHQkJ4H6jUyBM551ZoPSSzQtY6CWHXmjkL5zEpsZgmQhz7LolIDb6TSt9uVpZlkXVd5TxP7RHdct+3LoIhRroA+C9ijLKHoOLruiSlpAZYBr38bGlAROq0AsTj0OkQgIgaBlrHWoPfvorL9qEMgo4oifHei3OuEkvTWqsEGEAI/Ch93bA8CTBw+HlXDAYnBF8Nh+9qh5kEzCBsB8wTrr5hD86O0TIlUtPXtslWsm3Y6wfDj+nst+mweln64TfDN6L5dqzPClPjAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Architecture&quot;
+        title=&quot;Architecture&quot;
+        src=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/fcda8/arch.png&quot;
+        srcset=&quot;/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/12f09/arch.png 148w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/e4a3f/arch.png 295w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/fcda8/arch.png 590w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/efc66/arch.png 885w,
+/blog/static/7be07baa3c38e0b284a6af78bc1f1f21/29229/arch.png 1167w&quot;
+        sizes=&quot;(max-width: 590px) 100vw, 590px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt; &lt;/p&gt;
+&lt;p&gt;The way the controllers are structured in the &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server/tree/master/ui-server/src/controllers&quot;&gt;example repo&lt;/a&gt;
+Controllers are separated in 2 folders&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;API&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Can be Get or Post&lt;/li&gt;
+&lt;li&gt;Does not return a view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Pages&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Can only be GET&lt;/li&gt;
+&lt;li&gt;Is associated with a view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I am not sure of the best practice here, I came up with the model based on how the code in HHVM doc site is structured. One of the idiosyncrasies of hack is that code containing XHP cannot be namespaced. &lt;/p&gt;
+&lt;p&gt;Now, I love namespaces and also the separation between view and logic. I tried to emulate the NodeJs model where we have controllers and the HTML view completely separate. I couldn’t find data on what exactly is the best practice here so I came up with the view controller separation.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Controller&lt;/strong&gt; - Has the business logic and is bound to view using the getView method that all Page controllers need to implement. This also allows controllers to be namespaced as there is no XHP here.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Views&lt;/strong&gt; - Has the XHP and they can have different inheritance hierarchy for complex layouts, very similar to how Jade/ views work in Node.JS.&lt;/p&gt;
+&lt;p&gt;You could choose a different model for your app. There is no restriction from the router/framework side.&lt;/p&gt;
+&lt;h3&gt;Handling Globals&lt;/h3&gt;
+&lt;p&gt;There are quite a few global values that you may need. The way I accessed them was to have separate &lt;code class=&quot;language-text&quot;&gt;globals.hack&lt;/code&gt; which was typed and would get data off the globals. That way I could control the &lt;code class=&quot;language-text&quot;&gt;FixMe&lt;/code&gt; proliferation and limit it to only 1 file. Also, I used this library called &lt;code class=&quot;language-text&quot;&gt;usox/hackttp&lt;/code&gt; which allows us to create a Server request using&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;hack&quot;&gt;&lt;pre style=&quot;counter-reset: linenumber NaN&quot; class=&quot;language-hack line-numbers&quot;&gt;&lt;code class=&quot;language-hack&quot;&gt;$request = \Usox\HackTTP\create_server_request_from_globals();&lt;/code&gt;&lt;span aria-hidden=&quot;true&quot; class=&quot;line-numbers-rows&quot; style=&quot;white-space: normal; width: auto; left: 0;&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;without having to access the global variables. &lt;/p&gt;
+&lt;p&gt;You can see the completed project &lt;a href=&quot;https://github.com/abhikmitra/hack-memcache-mysql-web-server&quot;&gt;here&lt;/a&gt;. I have put all the setup details in the readme. Should be fairly straightforward. Let me know what I should have improved in this scaffolding or if there is a gap in my understanding that I need to fill.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Cracking the System Design Interview]]></title><description><![CDATA[This post is supplemented by a Youtube series of System Design Interviews What to expect from a system Design Interview Complete Mock…]]></description><link>https://abhikmitra.github.io/blog/sys-des/</link><guid isPermaLink="false">https://abhikmitra.github.io/blog/sys-des/</guid><pubDate>Tue, 25 Aug 2020 18:00:00 GMT</pubDate><content:encoded>&lt;p&gt;This post is supplemented by a Youtube series of System Design Interviews&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/channel/UCUm1OB1gDV0Tl0Mjx5I01-A?view_as=subscriber&quot;&gt;What to expect from a system Design Interview&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/playlist?list=PLHNJ91XSF3wzT6BaLVi4WbnuHcfZSXMek&quot;&gt;Complete Mock Interviews playlist&lt;/a&gt;&lt;/li&gt;
